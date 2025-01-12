@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { CirclePlus, CircleMinus } from 'lucide-react';
 import { useCategory } from '../Hooks/getCategory';
-import { useProducts } from '../Hooks/getProducts'; // Hook to fetch all products
-import { useProductsByCategory } from '../Hooks/getProductsByCategory'; // Hook to fetch products by category
+import { useProducts } from '../Hooks/getProducts';
+import { useProductsByCategory } from '../Hooks/getProductsByCategory';
+import axios from 'axios'; // Import axios for API requests
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
     const [cart, setCart] = useState([]);
@@ -82,8 +85,60 @@ const Home = () => {
     // Determine which products to display
     const displayedProducts = selectedTag === 'All' ? products : productsByCategory;
 
+    // Create Order
+    const [isCreatingOrder, setIsCreatingOrder] = useState(false);
+    const [orderError, setOrderError] = useState(null);
+    const [orderSuccess, setOrderSuccess] = useState(null);
+
+    const createOrder = async () => {
+        setIsCreatingOrder(true);
+        setOrderError(null);
+        setOrderSuccess(null);
+    
+        try {
+            // Prepare the order data
+            const orderData = {
+                products: cart.map((item) => ({
+                    productId: item.id,
+                    quantity: item.quantity,
+                    price: item.price,
+                    totalPrice: item.price * item.quantity,
+                })),
+                totalPrice: parseFloat(getCartTotal()),
+            };
+
+            console.log(orderData);
+    
+            // Send the order data to the API
+            const response = await axios.post('http://127.0.0.1:3000/orders', orderData);
+    
+            // Handle success with a toast notification
+            toast.success(`Commande créée avec succès ! ID de la commande : ${response.data.id}`);
+            setCart([]); // Clear the cart after successful order creation
+        } catch (err) {
+            // Handle error with a toast notification
+            toast.error('Échec de la création de la commande. Veuillez réessayer.');
+            console.error('Error creating order:', err);
+        } finally {
+            setIsCreatingOrder(false);
+        }
+    };
+
+
     return (
         <div className="flex flex-col md:flex-row p-4 min-h-screen">
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
+
             {/* Products Section */}
             <div className="w-full md:w-3/5 p-4 overflow-y-auto">
                 <h1 className="text-2xl font-bold mb-4">Products</h1>
@@ -130,7 +185,7 @@ const Home = () => {
                             />
                             <div className="p-4">
                                 <h2 className="text-xl font-semibold">{product.name}</h2>
-                                <p className="text-gray-600">${product.price}</p>
+                                <p className="text-gray-600">{product.price} DH</p>
                             </div>
                         </div>
                     ))}
@@ -147,7 +202,7 @@ const Home = () => {
                                 <div key={item.id} className="border-l-8 p-4 rounded-2xl bg-white grid grid-cols-2 sm:grid-cols-3">
                                     <div>
                                         <h2 className="text-xl font-semibold">{item.name}</h2>
-                                        <p className="text-gray-600">${item.price}</p>
+                                        <p className="text-gray-600">{item.price} DH</p>
                                     </div>
                                     <div className="flex items-center mt-2">
                                         <button
@@ -171,7 +226,7 @@ const Home = () => {
                                         </button>
                                     </div>
                                     <div>
-                                        <p className="text-gray-600 text-center font-bold">Total: ${getProductTotal(item)}</p>
+                                        <p className="text-gray-600 text-center font-bold">Total: {getProductTotal(item)} DH</p>
                                     </div>
                                 </div>
                             ))}
@@ -181,26 +236,26 @@ const Home = () => {
                     )}
                 </div>
 
-                {/* Cart Total and Actions */}
                 {cart.length > 0 && (
                     <div className="grid justify-center mt-4">
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-bold">Overall Total:</h2>
-                            <p className="text-xl font-bold">${getCartTotal()}</p>
+                            <h2 className="text-xl font-bold">Total du commande :</h2>
+                            <p className="text-xl font-bold">{getCartTotal()} DH</p>
                         </div>
 
                         <div className='flex gap-5'>
                             <button
-                                onClick={() => alert('Create Command clicked')}
-                                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                                onClick={createOrder}
+                                disabled={isCreatingOrder}
+                                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300"
                             >
-                                Create Command
+                                {isCreatingOrder ? 'Création de la commande...' : 'Créer la commande'}
                             </button>
                             <button
                                 onClick={() => setCart([])}
                                 className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                             >
-                                Cancel Command
+                                Annuler la commande
                             </button>
                         </div>
                     </div>
