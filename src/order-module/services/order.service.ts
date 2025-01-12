@@ -85,7 +85,7 @@ export class OrderService {
 
     async setOrderStatus(id: number, status: OrderStatus): Promise<Order> {
         const order = await this.getOrderById(id);
-        order.status = OrderStatus.READY;
+        order.status = status;
         return this.orderRepository.save(order);
     }
 }
