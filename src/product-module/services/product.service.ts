@@ -5,6 +5,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Between, Repository } from "typeorm";
 import { Category } from "src/category-module/entities/category.entity";
 import { CategoryService } from "src/category-module/services/categoy.service";
+import { CreateProductDto } from "../dtos/create-product.dto";
+import { UpdateProductDto } from "../dtos/update-product.dto";
 
 @Injectable()
 export class ProductService {
@@ -12,12 +14,17 @@ export class ProductService {
     constructor(
         @InjectRepository(Product)
         private productRepository: Repository<Product>,
-        @Inject(forwardRef(() => CategoryService))
-        private categoryService: CategoryService
+        @InjectRepository(Category)
+        private categoryRepository: Repository<Category>,
     ) {}
 
-    async createProduct(product: Product): Promise<Product> {
+    async createProduct(product: UpdateProductDto): Promise<Product> {
+        const category = await this.categoryRepository.findOne({ where: { id: product.categoryId } });
+        if(!category){
+            throw new NotFoundException('Catégorie non trouvée');
+        }
         const newProduct = this.productRepository.create(product);
+        newProduct.category = category;
         return this.productRepository.save(newProduct);
     }
 
@@ -32,8 +39,19 @@ export class ProductService {
         }
         return product;
     }
-    async updateProduct(id: number, product: Product): Promise<Product> {
-        await this.productRepository.update(id, product);
+    async updateProduct(id: number, product: CreateProductDto): Promise<Product> {
+       
+        const existingProduct = await this.productRepository.findOne({ where: { id } });
+        if(!existingProduct){
+            throw new NotFoundException('Produit non trouvé');
+        }
+        const category = await this.categoryRepository.findOne({ where: { id: product.categoryId } });
+        if(!category){
+            throw new NotFoundException('Catégorie non trouvée');
+        }
+        Object.assign(existingProduct, product);
+        existingProduct.category = category;
+        await this.productRepository.save(existingProduct);
         return this.productRepository.findOne({ where: { id } });
     }
 

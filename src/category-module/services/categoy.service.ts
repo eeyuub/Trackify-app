@@ -7,10 +7,13 @@ import { InjectRepository } from "@nestjs/typeorm";
 @Injectable()
 export class CategoryService {
 
+    protected categoryRepository: Repository<Category>;
     constructor(
         @InjectRepository(Category)
-        private categoryRepository: Repository<Category>,
-    ) {}
+         categoryRepository: Repository<Category>,
+    ) {
+        this.categoryRepository = categoryRepository;
+    }
 
     async findAll(): Promise<Category[]> {
         return this.categoryRepository.find();
