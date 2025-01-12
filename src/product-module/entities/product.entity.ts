@@ -15,6 +15,9 @@ export class Product {
     @ManyToOne(() => Category, category => category.products)
     category: Category;
 
+    @Column({nullable: true})
+    image: string;
+
     @CreateDateColumn()
     createdAt: Date;
 

@@ -8,6 +8,7 @@ import { OrderModule } from './order-module/order.module';
 import { ConfigModule } from '@nestjs/config';
 import { QrcodeGeneratorModule } from './qrcode-generator-module/qrcode-generator.module';
 import { ConfigService } from '@nestjs/config';
+import { UploadModule } from './upload-module/upload.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ConfigService } from '@nestjs/config';
     CategoryModule,
     OrderModule,
     QrcodeGeneratorModule,
+    UploadModule
   ],
   controllers: [
 

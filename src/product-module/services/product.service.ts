@@ -7,6 +7,7 @@ import { Category } from "src/category-module/entities/category.entity";
 import { CategoryService } from "src/category-module/services/categoy.service";
 import { CreateProductDto } from "../dtos/create-product.dto";
 import { UpdateProductDto } from "../dtos/update-product.dto";
+import { LocalStorageService } from "src/upload-module/services/local-upload.service";
 
 @Injectable()
 export class ProductService {
@@ -16,15 +17,17 @@ export class ProductService {
         private productRepository: Repository<Product>,
         @InjectRepository(Category)
         private categoryRepository: Repository<Category>,
+        private readonly localStorageService: LocalStorageService
     ) {}
 
-    async createProduct(product: UpdateProductDto): Promise<Product> {
+    async createProduct(product: CreateProductDto, file: Express.Multer.File): Promise<Product> {
         const category = await this.categoryRepository.findOne({ where: { id: product.categoryId } });
         if(!category){
             throw new NotFoundException('Catégorie non trouvée');
         }
         const newProduct = this.productRepository.create(product);
         newProduct.category = category;
+        newProduct.image = await this.localStorageService.localUpload(file);
         return this.productRepository.save(newProduct);
     }
 
@@ -39,18 +42,31 @@ export class ProductService {
         }
         return product;
     }
-    async updateProduct(id: number, product: CreateProductDto): Promise<Product> {
-       
+    async updateProduct(id: number, product: UpdateProductDto,file: Express.Multer.File): Promise<Product> {
         const existingProduct = await this.productRepository.findOne({ where: { id } });
         if(!existingProduct){
             throw new NotFoundException('Produit non trouvé');
         }
+
+        if(product.categoryId){
         const category = await this.categoryRepository.findOne({ where: { id: product.categoryId } });
-        if(!category){
-            throw new NotFoundException('Catégorie non trouvée');
+
+            if(!category){
+                throw new NotFoundException('Catégorie non trouvée');
+            }
+            existingProduct.category = category;
         }
+
+        if(product.setImageAsNull){
+            existingProduct.image = null;
+        }
+
+        if(file && !product.setImageAsNull){
+            existingProduct.image = await this.localStorageService.localUpload(file);
+        }
+
         Object.assign(existingProduct, product);
-        existingProduct.category = category;
+
         await this.productRepository.save(existingProduct);
         return this.productRepository.findOne({ where: { id } });
     }
