@@ -6,7 +6,6 @@ import { useProducts } from '../Hooks/getProducts';
 const Products = () => {
     const navigate = useNavigate();
 
-    // Fetch all products
     const { products, isLoading: isProductsLoading, error: productsError, fetchProducts } = useProducts();
     useEffect(() => {
         fetchProducts();

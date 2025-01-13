@@ -3,7 +3,7 @@ import { CirclePlus, CircleMinus } from 'lucide-react';
 import { useCategory } from '../Hooks/getCategory';
 import { useProducts } from '../Hooks/getProducts';
 import { useProductsByCategory } from '../Hooks/getProductsByCategory';
-import axios from 'axios'; // Import axios for API requests
+import axios from 'axios'; 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -149,7 +149,7 @@ const Home = () => {
                         onClick={() => setSelectedTag('All')}
                         className={`px-4 py-2 rounded-full text-sm font-semibold ${
                             selectedTag === 'All'
-                                ? 'bg-blue-500 text-white'
+                                ? 'bg-[#eec825] text-white'
                                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                         }`}
                     >
@@ -161,7 +161,7 @@ const Home = () => {
                             onClick={() => setSelectedTag(tag.name)}
                             className={`px-4 py-2 rounded-full text-sm font-semibold ${
                                 selectedTag === tag.name
-                                    ? 'bg-blue-500 text-white'
+                                    ? 'bg-[#eec825] text-white'
                                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                             }`}
                         >
@@ -172,23 +172,33 @@ const Home = () => {
 
                 {/* Product Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {displayedProducts?.map((product) => (
-                        <div
-                            key={product.id}
-                            className="border rounded-lg cursor-pointer hover:shadow-lg transition-shadow"
-                            onClick={() => addToCart(product)}
-                        >
-                            <img
-                                src={product.image || ''} // Add a fallback image if needed
-                                alt={product.name}
-                                className="w-full h-32 object-cover mb-2 rounded-t-lg"
-                            />
-                            <div className="p-4">
+                    {
+                        displayedProducts?.length > 0 ? (
+                            displayedProducts.map((product) => (
+                            <div
+                                key={product.id}
+                                className="border rounded-lg cursor-pointer hover:shadow-lg transition-shadow"
+                                onClick={() => addToCart(product)}
+                            >
+                                <img
+                                    src={
+                                        product.image
+                                        ? `http://localhost:3000${product.image}`
+                                        : "https://cdn-icons-png.flaticon.com/512/182/182727.png"
+                                    }
+                                    alt={product.name}
+                                    className="w-full h-32 object-contain mb-2 rounded-t-lg"
+                                />
+                                <div className="p-4">
                                 <h2 className="text-xl font-semibold">{product.name}</h2>
                                 <p className="text-gray-600">{product.price} DH</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                            ))
+                        ) : (
+                            <p className="text-gray-600 mt-5">Aucun produit dans cette catégorie</p>
+                        )
+                    }
                 </div>
             </div>
 
@@ -217,7 +227,7 @@ const Home = () => {
                                         <span className="mx-4">{item.quantity}</span>
                                         <button
                                             onClick={(e) => {
-                                                e.stopPropagation(); // Prevent event bubbling
+                                                e.stopPropagation(); 
                                                 increaseQuantity(item.id);
                                             }}
                                             className="text-gray-600 px-3 py-1"
@@ -232,24 +242,28 @@ const Home = () => {
                             ))}
                         </div>
                     ) : (
-                        <p className="text-gray-600">No products in the cart.</p>
+                        <p className="text-gray-600">Aucun produit dans le panier.</p>
                     )}
                 </div>
 
                 {cart.length > 0 && (
-                    <div className="grid justify-center mt-4">
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-bold">Total du commande :</h2>
-                            <p className="text-xl font-bold">{getCartTotal()} DH</p>
+                    <div className="grid mt-4">
+                        <div className="grid grid-cols-2 items-center mb-4">
+                            <div>
+                                <h2 className="text-xl font-bold">Total du commande :</h2>
+                            </div>
+                            <div>
+                                <p className="text-xl font-bold text-end">{getCartTotal()} DH</p>
+                            </div>
                         </div>
 
-                        <div className='flex gap-5'>
+                        <div className='flex justify-center gap-5 mt-5'>
                             <button
                                 onClick={createOrder}
                                 disabled={isCreatingOrder}
-                                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300"
+                                className="bg-[#eec825] text-white px-4 py-2 rounded disabled:bg-[#ebd57a]"
                             >
-                                {isCreatingOrder ? 'Création de la commande...' : 'Créer la commande'}
+                                {isCreatingOrder ? 'Création de la commande...' : 'Cénèrer la commande'}
                             </button>
                             <button
                                 onClick={() => setCart([])}

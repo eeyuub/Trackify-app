@@ -26,14 +26,17 @@ const SSEClient = () => {
     }, []);
 
   return (
-    <div>
-      <h1>New Order</h1>
-      {orderData ? (
-        <pre>{JSON.stringify(orderData, null, 2)}</pre>
-      ) : (
-        <p>Waiting for new orders...</p>
-      )}
-    </div>
+    <>
+      <div className='flex justify-center items-center h-[90vh]'>
+        <h1>New Order</h1>
+        {orderData ? (
+          <pre>{JSON.stringify(orderData, null, 2)}</pre>
+        ) : (
+          <p>Waiting for new orders...</p>
+        )}
+      </div>
+  
+    </>
   );
 };
 
