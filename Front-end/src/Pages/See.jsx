@@ -26,24 +26,24 @@ const SSEClient = () => {
   }, []);
 
 
-  const GetStyleOfStatus = (status) => {
-    switch (status) {
-      case 'en-preparation':
-        return 'bg-yellow-200 text-yellow-800';
-      case 'prêt':
-        return 'bg-blue-200 text-blue-800';
-      case 'livré':
-        return 'bg-green-200 text-green-800';
-      case 'annulé':
-        return 'bg-red-200 text-red-800';
-      default:
-        return 'bg-gray-200 text-gray-800';
-    }
-  }
+    const GetStyleOfStatus = (status) => {
+      switch (status) {
+        case 'en-preparation':
+          return 'bg-gray-200 text-gray-800'; // Gray for "en préparation"
+        case 'prêt':
+          return 'bg-yellow-200 text-yellow-800'; // Yellow for "prêt"
+        case 'livré':
+          return 'bg-green-200 text-green-800'; // Green for "livré"
+        case 'annulé':
+          return 'bg-red-200 text-red-800'; // Red for "annulé"
+        default:
+          return 'bg-gray-200 text-gray-800'; // Default gray
+      }
+    };
 
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  p-4">
+    <div className="flex flex-col items-center justify-center p-4">
       {orderData ? (
         <div className="bg-white p-6 rounded-lg w-full max-w-2xl">
           {orderData.qrCode && (
@@ -53,8 +53,11 @@ const SSEClient = () => {
             </div>
           )}
           <div className="mb-6 text-center">
-            <p><strong>Statut :</strong> {orderData.status}</p>
-            <p><strong>Prix Total :</strong> {orderData.totalPrice} DH</p>
+            <p>
+              <strong>Statut : </strong> 
+              <span className={`p-2 rounded-3xl ${GetStyleOfStatus(orderData.status)}`}>{orderData.status}</span>
+            </p>
+            <p className='mt-4'><strong>Prix Total :</strong> {orderData.totalPrice} DH</p>
           </div>
 
           <div className="mb-6">
@@ -76,7 +79,9 @@ const SSEClient = () => {
           </div>
         </div>
       ) : (
-        <p className="text-gray-600">En attente de nouvelles commandes...</p>
+        <div className="flex justify-center items-center h-[80vh]">
+          <p className="text-gray-600">En attente de nouvelles commandes...</p>
+        </div>
       )}
     </div>
   );
