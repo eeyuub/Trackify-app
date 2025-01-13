@@ -141,7 +141,7 @@ const Home = () => {
 
             {/* Products Section */}
             <div className="w-full md:w-3/5 p-4 overflow-y-auto">
-                <h1 className="text-2xl font-bold mb-4">Products</h1>
+                <h1 className="text-2xl font-bold mb-4">Produits</h1>
 
                 {/* Category Filters */}
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -191,7 +191,7 @@ const Home = () => {
                                 />
                                 <div className="p-4">
                                 <h2 className="text-xl font-semibold">{product.name}</h2>
-                                <p className="text-gray-600">{product.price} DH</p>
+                                <p className="text-black-600">{product.price} DH</p>
                                 </div>
                             </div>
                             ))

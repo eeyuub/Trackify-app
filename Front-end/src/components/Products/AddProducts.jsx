@@ -16,8 +16,13 @@ const productSchema = z.object({
         required_error: "La catégorie est obligatoire.",
         invalid_type_error: "La catégorie est obligatoire.",
     }).positive({ message: "La catégorie est obligatoire." }),
-    image: z.instanceof(File, { message: "L'image est obligatoire." })
-        .refine((file) => file.type.startsWith('image/'), { message: "Le fichier doit être une image." }),
+    image: z
+        .any() // Allow any type (File, undefined, etc.)
+        .optional() // Make the field optional
+        .refine(
+            (file) => !file || (file instanceof File && file.type.startsWith('image/')), // Validate if file is provided
+            { message: "Le fichier doit être une image." }
+        ),
 });
 
 const AddProducts = () => {
