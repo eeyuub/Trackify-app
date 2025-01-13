@@ -28,7 +28,6 @@ import { UploadModule } from './upload-module/upload.module';
         autoLoadEntities: true,
       }),
     }),
-    OrderAppModule,
     ProductModule,
     CategoryModule,
     OrderModule,

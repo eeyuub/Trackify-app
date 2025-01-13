@@ -35,6 +35,13 @@ export class OrderStatusController {
         );
     }
 
+    @Post(':id/preparing')
+    async preparingOrder(@Param('id') id: number): Promise<Order> {
+        const preparingOrder = await this.orderService.setOrderStatus(id, OrderStatus.PROCESSING);
+        this.orderSubjects.get(id).next(preparingOrder);
+        return preparingOrder;
+    }
+
     @Post(':id/ready')
     async readyOrder(@Param('id') id: number): Promise<Order> {
         const readyOrder = await this.orderService.setOrderStatus(id, OrderStatus.READY);
