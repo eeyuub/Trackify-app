@@ -10,7 +10,7 @@ const useUpdateCategory = (fetchCategory) => {
         setError(null);
 
         try {
-            const response = await fetch(`http://127.0.0.1:3000/categories/${categoryId}`);
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/categories/${categoryId}`);
             if (response.ok) {
                 const data = await response.json();
                 return data; // Return the category data
