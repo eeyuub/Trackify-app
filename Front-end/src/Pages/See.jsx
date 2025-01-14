@@ -5,7 +5,7 @@ const SSEClient = () => {
 
   useEffect(() => {
     // Créer une instance EventSource pour se connecter au endpoint SSE
-    const eventSource = new EventSource('http://localhost:3000/orders/new-order');
+    const eventSource = new EventSource(`${import.meta.env.VITE_BACKEND_URL}/orders/new-order`);
 
     // Écouter les messages du serveur
     eventSource.onmessage = (event) => {

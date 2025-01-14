@@ -6,7 +6,7 @@ import useMarkAsReady from '../Hooks/Orders/useSetReady';
 import useMarkAsDelivered from '../Hooks/Orders/useSetDelivred';
 import useCancelOrder from '../Hooks/Orders/useSetCancel';
 import useMarkAsPreparing from '../Hooks/Orders/useSetPreparation';
-import OrderCard from '../components/Order/OrderCard'; // Import the OrderCard component
+import OrderCard from '../components/Order/OrderCard'; 
 
 const Order = () => {
     const { orders, loading, error, fetchOrders } = useOrders();

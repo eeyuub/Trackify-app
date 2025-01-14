@@ -110,7 +110,7 @@ const Home = () => {
             console.log(orderData);
     
             // Send the order data to the API
-            const response = await axios.post('http://127.0.0.1:3000/orders', orderData);
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/orders`, orderData);
     
             // Handle success with a toast notification
             toast.success(`Commande créée avec succès ! ID de la commande : ${response.data.id}`);

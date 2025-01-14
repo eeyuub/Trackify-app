@@ -16,9 +16,7 @@ const useMarkAsReady = () => {
                 `${import.meta.env.VITE_BACKEND_URL}/order-status/${orderId}/ready`
             );
 
-            if (response.status === 200) {
-                toast.success('Commande marquée comme prête avec succès !'); 
-            }
+            toast.success('Commande marquée comme prête avec succès !');
         } catch (err) {
             setError(err.response?.data?.message || 'Une erreur est survenue'); 
             // toast.error('Erreur lors de la mise à jour du statut de la commande.');

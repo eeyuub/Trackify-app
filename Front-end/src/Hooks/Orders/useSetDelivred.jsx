@@ -16,9 +16,7 @@ const useMarkAsDelivered = () => {
             );
 
             
-            if (response.status === 200) {
-                toast.success('Commande marquée comme livrée avec succès !'); 
-            }
+            toast.success('Commande marquée comme livrée avec succès !'); 
         } catch (err) {
             setError(err.response?.data?.message || 'Une erreur est survenue');
             console.log(err.response?.data?.message); 

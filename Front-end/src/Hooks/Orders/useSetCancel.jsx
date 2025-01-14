@@ -17,9 +17,7 @@ const useCancelOrder = () => {
             );
 
             
-            if (response.status === 200) {
-                toast.success('Commande annulée avec succès !'); 
-            }
+            toast.success('Commande annulée avec succès !'); 
         } catch (err) {
             setError(err.response?.data?.message || 'Une erreur est survenue'); 
             console.log(err.response?.data?.message);
